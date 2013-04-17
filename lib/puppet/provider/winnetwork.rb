@@ -55,6 +55,20 @@ class Puppet::Provider::Winnetwork < Puppet::Provider
     oOutParam = adapter.ExecMethod_("SetDNSServerSearchOrder", oInParam)
   end
 
+  def setdnssuffixsearchorder(adapter,suffixsearchorder)
+    oMethod = adapter.Methods_("SetDNSSuffixSearchOrder")
+    oInParam = oMethod.InParameters.SpawnInstance_()
+    oInParam.DNSDomainSuffixSearchOrder = suffixsearchorder
+    oOutParam = adapter.ExecMethod_("SetDNSSuffixSearchOrder", oInParam)
+  end
+
+  def setdnsdomain(adapter,dnshostname)
+    oMethod = adapter.Methods_("SetDNSDomain")
+    oInParam = oMethod.InParameters.SpawnInstance_()
+    oInParam.DNSHostName = dnshostname
+    oOutParam = adapter.ExecMethod_("SetDNSDomain", oInParam)
+  end
+
   def setdyndns(adapter,dyndnsreg_hash={})
     oMethod = adapter.Methods_("SetDynamicDNSRegistration")
     oInParam = oMethod.InParameters.SpawnInstance_()
@@ -62,7 +76,7 @@ class Puppet::Provider::Winnetwork < Puppet::Provider
     oInParam.DomainDNSRegistrationEnabled = (dyndnsreg_hash[:dnsregister] == :true)
     oOutParam = adapter.ExecMethod_("SetDynamicDNSRegistration", oInParam)
   end
-  
+
   def netbios_map
     {
       :dhcp      => 0,
@@ -70,7 +84,7 @@ class Puppet::Provider::Winnetwork < Puppet::Provider
       :disabled  => 2,
     }
   end
-  
+
   def settcpipnetbios(adapter,netbios_hash={})
     oMethod = adapter.Methods_("SetTCPIPNetBIOS")
     oInParam = oMethod.InParameters.SpawnInstance_()

@@ -32,6 +32,14 @@ Puppet::Type.newtype(:ipconfig) do
     defaultto 256
   end
 
+  newproperty(:dnsdomainsuffixsearchorder, :array_matching => :all) do
+    desc 'Append these DNS Suffixes'
+  end
+
+  newproperty(:dnshostname) do
+    desc 'DNS Suffix for this connection'
+  end
+
   newproperty(:dnsregister, :boolean => true) do
     desc 'Register this connections address in DNS'
     newvalues(:true, :false)
