@@ -10,14 +10,14 @@ Puppet::Type.type(:ipconfig).provide(:ipconfig, :parent => Puppet::Provider::Win
     my_wmi=self.wmi_connect
     nicdriver=wmi_exec_drv(my_wmi,@resource[:name])
 
-    nicdriver.each do |device| 
+    nicdriver.each do |device|
       @deviceid=device.DeviceID
       break
     end
 
     deviceid_esc=@deviceid.gsub('\\','\\\\\\') # wonky escaping needed.
     adapters=wmi_exec_adapter(my_wmi, deviceid_esc)
-  
+
     adapters.each { |adapter|
 
       if adapter.deviceid
@@ -33,7 +33,7 @@ Puppet::Type.type(:ipconfig).provide(:ipconfig, :parent => Puppet::Provider::Win
     enum_netconn do |netconnectionid|
      rc=true if netconnectionid.dhcpenabled == false
     end
-    
+
     return rc
   end
 
@@ -113,6 +113,32 @@ Puppet::Type.type(:ipconfig).provide(:ipconfig, :parent => Puppet::Provider::Win
     end
   end
 
+  def dnsdomainsuffixsearchorder
+    dnssuffixes ||= Array.new
+    enum_netconn do |netconnectionid|
+      return netconnectionid.dnsdomainsuffixsearchorder
+    end
+  end
+
+  def dnsdomainsuffixsearchorder=newvalue
+    enum_netconn do |netconnectionid|
+      setdnssuffixsearchorder(netconnectionid,@resource[:dnsdomainsuffixsearchorder])
+    end
+  end
+
+  def dnshostname
+    dnssuffixes ||= Array.new
+    enum_netconn do |netconnectionid|
+      return netconnectionid.DNSHostName
+    end
+  end
+
+  def dnshostname=newvalue
+    enum_netconn do |netconnectionid|
+      setdnsdomain(netconnectionid,@resource[:dnshostname])
+    end
+  end
+
   def dnsregister
     enum_netconn do |netconnectionid|
       dnsreg=netconnectionid.domaindnsregistrationenabled
@@ -161,6 +187,8 @@ Puppet::Type.type(:ipconfig).provide(:ipconfig, :parent => Puppet::Provider::Win
     self.dns = @resource[:dns]
     self.dnsregister = @resource[:dnsregister]
     self.netbios = @resource[:netbios]
+    self.dnsdomainsuffixsearchorder = @resource[:dnsdomainsuffixsearchorder]
+    self.dnshostname = @resource[:dnshostname]
     true
   end
 
