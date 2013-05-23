@@ -23,7 +23,8 @@ class Puppet::Provider::Winnetwork < Puppet::Provider
   end
 
   def wmi_exec_adapter (wmi, deviceid)
-    wql_adapter = "SELECT * FROM Win32_NetworkAdapter WHERE PNPDeviceID = '#{deviceid}'"
+    #wql_adapter = "SELECT * FROM Win32_NetworkAdapter WHERE PNPDeviceID = '#{deviceid}'"
+    wql_adapter = "SELECT * FROM Win32_NetworkAdapter WHERE NetConnectionID = '#{deviceid}'"
     wmi.ExecQuery(wql_adapter)
   end
 

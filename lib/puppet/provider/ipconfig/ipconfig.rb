@@ -8,16 +8,21 @@ Puppet::Type.type(:ipconfig).provide(:ipconfig, :parent => Puppet::Provider::Win
     raise "needs a block" unless block_given?
 
     my_wmi=self.wmi_connect
-    nicdriver=wmi_exec_drv(my_wmi,@resource[:name])
+    #nicdriver=wmi_exec_drv(my_wmi,@resource[:name])
 
-    nicdriver.each do |device|
-      @deviceid=device.DeviceID
-      break
-    end
+    #nicdriver.each do |device|
+    #  @deviceid=device.DeviceID
+    #  break
+    #end
 
-    deviceid_esc=@deviceid.gsub('\\','\\\\\\') # wonky escaping needed.
-    adapters=wmi_exec_adapter(my_wmi, deviceid_esc)
+    #deviceid_esc=@deviceid.gsub('\\','\\\\\\') # wonky escaping needed.
+    #adapters=wmi_exec_adapter(my_wmi, deviceid_esc)
 
+    # this needs to be DRYed up to just wmi_exec_assoc 
+    # disabled deviceid based namevar and moved to human friendly
+    # netconnectionid
+
+    adapters = wmi_exec_adapter(my_wmi, @resource[:name])
     adapters.each { |adapter|
 
       if adapter.deviceid

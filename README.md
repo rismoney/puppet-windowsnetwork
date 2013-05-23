@@ -9,7 +9,7 @@ It uses wmi via win32ole
 Example:
 
 ```
-ipconfig {'Intel(R) 82567LM-3 Gigabit Network Connection':
+ipconfig {'Local Area Connection':
       ensure                      => present,
       ipaddress                   => ["10.10.10.100"],
       subnetmask                  => ["255.255.255.0"],
