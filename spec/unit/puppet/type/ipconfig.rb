@@ -9,3 +9,4 @@ describe Puppet::Type.type(:ipconfig) do
       Puppet::Type.type(:ipconfig).new(:name => '')
     }.to raise_error(Puppet::Error, /Name must not be empty/)
   end
+end
