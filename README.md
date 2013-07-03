@@ -20,5 +20,5 @@ ipconfig {'Local Area Connection':
       netbios                     => 'enabled',
       dns                         => ['8.8.8.8','8.8.4.4'],
       dnsdomainsuffixsearchorder  => ['example.com','example2.com'],
-      dnshostname                 => 'example.com'
+      dnsdomain                   => 'example.com'
 ```

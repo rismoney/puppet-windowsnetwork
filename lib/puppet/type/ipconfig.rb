@@ -36,7 +36,7 @@ Puppet::Type.newtype(:ipconfig) do
     desc 'Append these DNS Suffixes'
   end
 
-  newproperty(:dnshostname) do
+  newproperty(:dnsdomain) do
     desc 'DNS Suffix for this connection'
   end
 
