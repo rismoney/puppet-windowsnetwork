@@ -18,7 +18,7 @@ Puppet::Type.type(:ipconfig).provide(:ipconfig, :parent => Puppet::Provider::Win
     #deviceid_esc=@deviceid.gsub('\\','\\\\\\') # wonky escaping needed.
     #adapters=wmi_exec_adapter(my_wmi, deviceid_esc)
 
-    # this needs to be DRYed up to just wmi_exec_assoc 
+    # this needs to be DRYed up to just wmi_exec_assoc
     # disabled deviceid based namevar and moved to human friendly
     # netconnectionid
 
@@ -131,16 +131,16 @@ Puppet::Type.type(:ipconfig).provide(:ipconfig, :parent => Puppet::Provider::Win
     end
   end
 
-  def dnshostname
+  def dnsdomain
     dnssuffixes ||= Array.new
     enum_netconn do |netconnectionid|
-      return netconnectionid.DNSHostName
+      return netconnectionid.DNSDomain
     end
   end
 
-  def dnshostname=newvalue
+  def dnsdomain=newvalue
     enum_netconn do |netconnectionid|
-      setdnsdomain(netconnectionid,@resource[:dnshostname])
+      setdnsdomain(netconnectionid,@resource[:dnsdomain])
     end
   end
 
@@ -193,7 +193,7 @@ Puppet::Type.type(:ipconfig).provide(:ipconfig, :parent => Puppet::Provider::Win
     self.dnsregister = @resource[:dnsregister]
     self.netbios = @resource[:netbios]
     self.dnsdomainsuffixsearchorder = @resource[:dnsdomainsuffixsearchorder]
-    self.dnshostname = @resource[:dnshostname]
+    self.dnsdomain = @resource[:dnsdomain]
     true
   end
 

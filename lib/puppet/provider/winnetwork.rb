@@ -63,10 +63,10 @@ class Puppet::Provider::Winnetwork < Puppet::Provider
     oOutParam = adapter.ExecMethod_("SetDNSSuffixSearchOrder", oInParam)
   end
 
-  def setdnsdomain(adapter,dnshostname)
+  def setdnsdomain(adapter,dnsdomain)
     oMethod = adapter.Methods_("SetDNSDomain")
     oInParam = oMethod.InParameters.SpawnInstance_()
-    oInParam.DNSHostName = dnshostname
+    oInParam.DNSDomain = dnsdomain
     oOutParam = adapter.ExecMethod_("SetDNSDomain", oInParam)
   end
 
