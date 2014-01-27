@@ -188,12 +188,12 @@ Puppet::Type.type(:ipconfig).provide(:ipconfig, :parent => Puppet::Provider::Win
 
   def create
     self.ipaddress= @resource[:ipaddress]
-    self.defaultgateway = @resource[:defaultgateway]
-    self.dns = @resource[:dns]
-    self.dnsregister = @resource[:dnsregister]
-    self.netbios = @resource[:netbios]
-    self.dnsdomainsuffixsearchorder = @resource[:dnsdomainsuffixsearchorder]
-    self.dnsdomain = @resource[:dnsdomain]
+    self.defaultgateway = @resource[:defaultgateway] unless @resource[:defaultgateway].to_s.empty?
+    self.dns = @resource[:dns] unless @resource[:dns].to_s.empty?
+    self.dnsregister = @resource[:dnsregister] unless @resource[:dnsregister].to_s.empty?
+    self.netbios = @resource[:netbios] unless @resource[:netbios].to_s.empty?
+    self.dnsdomainsuffixsearchorder = @resource[:dnsdomainsuffixsearchorder] unless @resource[:dnsdomainsuffixsearchorder].to_s.empty?
+    self.dnsdomain = @resource[:dnsdomain] unless @resource[:dnsdomain].to_s.empty?
     true
   end
 
