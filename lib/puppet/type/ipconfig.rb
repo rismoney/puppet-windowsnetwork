@@ -43,19 +43,16 @@ Puppet::Type.newtype(:ipconfig) do
   newproperty(:dnsregister, :boolean => true) do
     desc 'Register this connections address in DNS'
     newvalues(:true, :false)
-    defaultto :true
   end
 
   newproperty(:fulldnsregister, :boolean => true) do
     desc 'Use this connections DNS suffix in DNS registraton'
     newvalues(:true, :false)
-    defaultto :false
   end
 
   newproperty(:netbios) do
     desc 'Netbios setting, Enable Netbios over TCPIP, Disable over TCPIP, or Use Netbios via DHCP'
     newvalues(:enabled, :disabled, :dhcp)
-    defaultto :dhcp
   end
 
   newproperty(:dns, :array_matching => :all) do
