@@ -1,4 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', 'winnetwork')
+KEY_WOW64_64KEY = 0x100 unless defined?(KEY_WOW64_64KEY)
+KEY_WOW64_32KEY = 0x200 unless defined?(KEY_WOW64_32KEY)
 
 Puppet::Type.type(:ipconfig).provide(:ipconfig, :parent => Puppet::Provider::Winnetwork) do
 
@@ -33,6 +35,20 @@ Puppet::Type.type(:ipconfig).provide(:ipconfig, :parent => Puppet::Provider::Win
     }
   end
 
+
+
+
+def getreg(guid,keyname) 
+  require 'win32/registry'
+  keypath = "SYSTEM\\CurrentControlSet\\services\\Tcpip\\Parameters\\Interfaces\\" + guid
+  reg_type = Win32::Registry::KEY_READ | KEY_WOW64_64KEY
+  Win32::Registry::HKEY_LOCAL_MACHINE.open(keypath, reg_type) do |reg|
+    regkey = reg[keyname]
+    return regkey
+  end
+end
+  
+  
   def exists?
     rc=false
     enum_netconn do |netconnectionid|
@@ -45,10 +61,11 @@ Puppet::Type.type(:ipconfig).provide(:ipconfig, :parent => Puppet::Provider::Win
   def ipaddress
     ipv4addrs ||= Array.new
     enum_netconn do |netconnectionid|
-      #p netconnectionid.properties_.each {|x| p x.name}
-      netconnectionid.ipaddress.each { |ip|
-        ipv4addrs << ip if IPAddr.new(ip).ipv4?
-      }
+       guid=netconnectionid.settingid
+       # we switched to regkey here because wmi returns
+       # all ip addresses including cluster VIPs.
+       # The regkey contains only the static assignments
+       ipv4addrs = getreg(guid,'IPAddress')
     end
     return ipv4addrs
   end
@@ -64,9 +81,11 @@ Puppet::Type.type(:ipconfig).provide(:ipconfig, :parent => Puppet::Provider::Win
   def subnetmask
     smasks ||= Array.new
     enum_netconn do |netconnectionid|
-      netconnectionid.ipsubnet.each { |sm|
-        smasks << sm if IPAddr.new(sm).ipv4?
-      }
+      guid=netconnectionid.settingid
+      # we switched to regkey here because wmi returns
+      # all ip addresses including cluster VIPs.
+      # The regkey contains only the static assignments
+      smasks = getreg(guid,'SubnetMask')
     end
     return smasks
   end
@@ -171,10 +190,10 @@ Puppet::Type.type(:ipconfig).provide(:ipconfig, :parent => Puppet::Provider::Win
   end
 
   def netbios
-
     enum_netconn do |netconnectionid|
-      netbios=netconnectionid.tcpipnetbiosoptions
-      return netbios_map.invert[netbios].to_s
+      netbios=netconnectionid.tcpipnetbiosoptions.to_i
+      nbsetting=Hash[netbios_map.map{ |k, v| [v, k.to_s] }][netbios]
+      return nbsetting
     end
   end
 
