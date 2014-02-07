@@ -5,6 +5,7 @@ class Puppet::Provider::Winnetwork < Puppet::Provider
     if Puppet.features.microsoft_windows?
       begin
         require 'win32ole'
+        require 'win32/registry'
       rescue LoadError => exc
         msg = "Could not load the required win32ole gem [#{exc.message}]"
         Puppet.err msg
@@ -89,8 +90,8 @@ class Puppet::Provider::Winnetwork < Puppet::Provider
   def settcpipnetbios(adapter,netbios_hash={})
     oMethod = adapter.Methods_("SetTCPIPNetBIOS")
     oInParam = oMethod.InParameters.SpawnInstance_()
-    netbiosflag=netbios_map[netbios_hash[:netbios].to_sym]
-    oInParam.TcpipNetbiosOptions = netbiosflag
+    netbiosflag=netbios_map[netbios_hash[:netbios]]
+    oInParam.TcpipNetbiosOptions = netbiosflag.to_s
     oOutParam = adapter.ExecMethod_("SetTCPIPNetBIOS", oInParam)
   end
 end
