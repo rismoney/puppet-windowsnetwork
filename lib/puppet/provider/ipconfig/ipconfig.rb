@@ -51,10 +51,22 @@ end
   
   def exists?
     rc=false
-    enum_netconn do |netconnectionid|
-     rc=true if netconnectionid.dhcpenabled == false
-    end
-
+    my_wmi=self.wmi_connect
+  
+  
+    adapters = wmi_exec_adapter(my_wmi, @resource[:name])
+    adapters.each { |adapter|
+      deviceid = adapter.deviceid
+      p "this is the deviceid"
+      p deviceid
+      assocs = wmi_exec_assoc(my_wmi, deviceid)
+      assocs.each { |netconnectionid|
+        @dhcpenabled = netconnectionid.dhcpenabled
+        p "this is dhcpenabled"
+        p @dhcpenabled
+      }
+    }
+    rc=true if @dhcpenabled == false
     return rc
   end
 
@@ -213,6 +225,7 @@ end
     self.dnsregister = @resource[:dnsregister] unless @resource[:dnsregister].to_s.empty?
     self.netbios = @resource[:netbios] unless @resource[:netbios].to_s.empty?
     self.dnsdomainsuffixsearchorder = @resource[:dnsdomainsuffixsearchorder] unless @resource[:dnsdomainsuffixsearchorder].to_s.empty?
+    sleep 5
     true
   end
 
