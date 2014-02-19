@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', 'winnetwork')
-KEY_WOW64_64KEY = 0x100 unless defined?(KEY_WOW64_64KEY)
-KEY_WOW64_32KEY = 0x200 unless defined?(KEY_WOW64_32KEY)
+WOW64_64 = 0x100 unless defined?(WOW64_64)
+WOW64_32 = 0x200 unless defined?(WOW64_32)
 
 Puppet::Type.type(:ipconfig).provide(:ipconfig, :parent => Puppet::Provider::Winnetwork) do
 
@@ -41,7 +41,7 @@ Puppet::Type.type(:ipconfig).provide(:ipconfig, :parent => Puppet::Provider::Win
 def getreg(guid,keyname) 
   require 'win32/registry'
   keypath = "SYSTEM\\CurrentControlSet\\services\\Tcpip\\Parameters\\Interfaces\\" + guid
-  reg_type = Win32::Registry::KEY_READ | KEY_WOW64_64KEY
+  reg_type = Win32::Registry::KEY_READ | WOW64_64
   Win32::Registry::HKEY_LOCAL_MACHINE.open(keypath, reg_type) do |reg|
     regkey = reg[keyname]
     return regkey
