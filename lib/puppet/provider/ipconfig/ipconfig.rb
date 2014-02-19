@@ -213,6 +213,7 @@ end
     self.dnsregister = @resource[:dnsregister] unless @resource[:dnsregister].to_s.empty?
     self.netbios = @resource[:netbios] unless @resource[:netbios].to_s.empty?
     self.dnsdomainsuffixsearchorder = @resource[:dnsdomainsuffixsearchorder] unless @resource[:dnsdomainsuffixsearchorder].to_s.empty?
+    sleep 5
     true
   end
 
