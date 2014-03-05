@@ -1,4 +1,5 @@
 require File.join(File.dirname(__FILE__), '..', 'winnetwork')
+require 'ping'
 WOW64_64 = 0x100 unless defined?(WOW64_64)
 WOW64_32 = 0x200 unless defined?(WOW64_32)
 
@@ -36,19 +37,24 @@ Puppet::Type.type(:ipconfig).provide(:ipconfig, :parent => Puppet::Provider::Win
   end
 
 
-
-
-def getreg(guid,keyname) 
-  require 'win32/registry'
-  keypath = "SYSTEM\\CurrentControlSet\\services\\Tcpip\\Parameters\\Interfaces\\" + guid
-  reg_type = Win32::Registry::KEY_READ | WOW64_64
-  Win32::Registry::HKEY_LOCAL_MACHINE.open(keypath, reg_type) do |reg|
-    regkey = reg[keyname]
-    return regkey
+  def backoff(upto)
+    result = [ ]
+    (1..upto).each do |iter|
+      result << ((2**iter))
+    end
+    return result
   end
-end
-  
-  
+
+  def getreg(guid,keyname) 
+    require 'win32/registry'
+    keypath = "SYSTEM\\CurrentControlSet\\services\\Tcpip\\Parameters\\Interfaces\\" + guid
+    reg_type = Win32::Registry::KEY_READ | WOW64_64
+    Win32::Registry::HKEY_LOCAL_MACHINE.open(keypath, reg_type) do |reg|
+      regkey = reg[keyname]
+      return regkey
+    end
+  end
+
   def exists?
     rc=false
     enum_netconn do |netconnectionid|
@@ -109,6 +115,11 @@ end
       setgateways(netconnectionid,
         :defaultgateway    => @resource[:defaultgateway],
         :gwcostmetric      => @resource[:gwcostmetric])
+    end
+
+    self.backoff(5).each do |sleeptime|
+      foo = Ping.pingecho(@resource[:defaultgateway].to_s, 10)
+      foo ? break : sleep(sleeptime)
     end
   end
 
@@ -204,7 +215,6 @@ end
     end
   end
 
-
   def create
     self.dnsdomain = @resource[:dnsdomain] unless @resource[:dnsdomain].to_s.empty?
     self.ipaddress= @resource[:ipaddress]
@@ -213,7 +223,7 @@ end
     self.dnsregister = @resource[:dnsregister] unless @resource[:dnsregister].to_s.empty?
     self.netbios = @resource[:netbios] unless @resource[:netbios].to_s.empty?
     self.dnsdomainsuffixsearchorder = @resource[:dnsdomainsuffixsearchorder] unless @resource[:dnsdomainsuffixsearchorder].to_s.empty?
-    sleep 5
+
     true
   end
 
