@@ -1,5 +1,4 @@
 require File.join(File.dirname(__FILE__), '..', 'winnetwork')
-require 'ping'
 WOW64_64 = 0x100 unless defined?(WOW64_64)
 WOW64_32 = 0x200 unless defined?(WOW64_32)
 
@@ -118,8 +117,9 @@ Puppet::Type.type(:ipconfig).provide(:ipconfig, :parent => Puppet::Provider::Win
     end
 
     self.backoff(5).each do |sleeptime|
-      foo = Ping.pingecho(@resource[:defaultgateway].to_s, 10)
-      foo ? break : sleep(sleeptime)
+      result = %x(ping -n 1 #{@resource[:defaultgateway].to_s})
+      ec = $?.exitstatus
+      ec == 0 ? break : sleep(sleeptime)
     end
   end
 
