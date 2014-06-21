@@ -50,6 +50,13 @@ class Puppet::Provider::Winnetwork < Puppet::Provider
     oOutParam = adapter.ExecMethod_("SetGateways", oInParam)
   end
 
+  def setipconnectionmetric(adapter,metric)
+    oMethod = adapter.Methods_("SetIPConnectionMetric")
+    oInParam = oMethod.InParameters.SpawnInstance_()
+    oInParam.IPConnectionMetric = metric
+    oOutParam = adapter.ExecMethod_("SetIPConnectionMetric", oInParam)
+  end
+
   def setdnsserversearchorder(adapter,searchorder)
     oMethod = adapter.Methods_("SetDNSServerSearchOrder")
     oInParam = oMethod.InParameters.SpawnInstance_()

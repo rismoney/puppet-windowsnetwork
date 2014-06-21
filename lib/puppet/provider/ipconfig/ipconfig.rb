@@ -44,7 +44,7 @@ Puppet::Type.type(:ipconfig).provide(:ipconfig, :parent => Puppet::Provider::Win
     return result
   end
 
-  def getreg(guid,keyname) 
+  def getreg(guid,keyname)
     require 'win32/registry'
     keypath = "SYSTEM\\CurrentControlSet\\services\\Tcpip\\Parameters\\Interfaces\\" + guid
     reg_type = Win32::Registry::KEY_READ | WOW64_64
@@ -127,6 +127,19 @@ Puppet::Type.type(:ipconfig).provide(:ipconfig, :parent => Puppet::Provider::Win
     enum_netconn do |netconnectionid|
       gwcm=netconnectionid.gatewaycostmetric.to_s
       return gwcm
+    end
+  end
+
+  def ipconnectionmetric
+    enum_netconn do |netconnectionid|
+      metric = netconnectionid.ipconnectionmetric.to_s
+      return metric
+    end
+  end
+
+  def ipconnectionmetric= newvalue
+    enum_netconn do |netconnectionid|
+      setipconnectionmetric(netconnectionid,@resource[:ipconnectionmetric])
     end
   end
 
