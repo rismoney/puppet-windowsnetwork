@@ -1,5 +1,5 @@
 name    'rismoney-puppet-windowsnetwork'
-version '0.0.1'
+version '0.0.2'
 source 'git@github.com:rismoney/puppet-windowsnetwork.git'
 author 'rismoney'
 license 'TBD'
