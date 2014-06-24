@@ -130,6 +130,10 @@ Puppet::Type.type(:ipconfig).provide(:ipconfig, :parent => Puppet::Provider::Win
     end
   end
 
+  def gwcostmetric= newvalue
+    self.defaultgateway= @resource[:defaultgateway]
+  end
+
   def ipconnectionmetric
     enum_netconn do |netconnectionid|
       metric = netconnectionid.ipconnectionmetric.to_s
@@ -141,10 +145,6 @@ Puppet::Type.type(:ipconfig).provide(:ipconfig, :parent => Puppet::Provider::Win
     enum_netconn do |netconnectionid|
       setipconnectionmetric(netconnectionid,@resource[:ipconnectionmetric])
     end
-  end
-
-  def gwcostmetric= newvalue
-    self.defaultgateway= @resource[:defaultgateway]
   end
 
   def dns
