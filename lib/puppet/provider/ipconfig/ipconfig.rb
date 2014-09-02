@@ -125,8 +125,14 @@ Puppet::Type.type(:ipconfig).provide(:ipconfig, :parent => Puppet::Provider::Win
 
   def gwcostmetric
     enum_netconn do |netconnectionid|
-      gwcm=netconnectionid.gatewaycostmetric.to_s
-      return gwcm
+    raw_gwcm = netconnectionid.gatewaycostmetric
+
+    if raw_gwcm.nil? || raw_gwcm.empty?
+      gwcm = ""
+    else
+      gwcm=raw_gwcm.join(',')
+    end
+    return gwcm
     end
   end
 
