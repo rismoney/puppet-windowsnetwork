@@ -1,4 +1,4 @@
-name    'rismoney-puppet-windowsnetwork'
+name    'rismoney-windowsnetwork'
 version '0.0.2'
 source 'git@github.com:rismoney/puppet-windowsnetwork.git'
 author 'rismoney'
