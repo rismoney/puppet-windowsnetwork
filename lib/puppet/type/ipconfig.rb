@@ -32,6 +32,10 @@ Puppet::Type.newtype(:ipconfig) do
     defaultto 256
   end
 
+  newproperty(:ipconnectionmetric) do
+    desc "The IP Connection Metric for the Adapter"
+  end
+
   newproperty(:dnsdomainsuffixsearchorder, :array_matching => :all) do
     desc 'Append these DNS Suffixes'
   end
