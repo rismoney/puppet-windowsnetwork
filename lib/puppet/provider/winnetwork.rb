@@ -46,7 +46,7 @@ class Puppet::Provider::Winnetwork < Puppet::Provider
     oMethod = adapter.Methods_("SetGateways")
     oInParam = oMethod.InParameters.SpawnInstance_()
     oInParam.DefaultIPGateway = gateways_hash[:defaultgateway]
-    oInParam.GatewayCostMetric = gateways_hash[:gwcostmetric].to_a
+    oInParam.GatewayCostMetric = gateways_hash[:gwcostmetric]
     oOutParam = adapter.ExecMethod_("SetGateways", oInParam)
   end
 
